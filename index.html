@@ -368,7 +368,7 @@ POP.Bucket = function () {
   this.remove = false
 
   this.update = function () {
-    this.x += POP.vx
+    this.x += POP.vx/10
 
     if(this.x > (POP.WIDTH - 50) && POP.vx > 0){
       this.x = POP.WIDTH - 50
