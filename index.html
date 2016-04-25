@@ -358,7 +358,7 @@ POP.Bubble = function() {
 
     this.type = 'bubble';
     this.r = (Math.random() * 20) + 10;
-    this.x = 150//(Math.random() * (POP.WIDTH) - this.r);
+    this.x = (Math.random() * (POP.WIDTH) - this.r);
     this.speed = POP.speed;
     this.y = - 100; // make sure it starts off screen
     this.remove = false;
