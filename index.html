@@ -209,12 +209,13 @@ var POP = {
 
         if ((POP.entities[i].type === 'bubble')) {
           // hit = POP.collides(POP.entities[i], {x: POP.Input.x, y: POP.Input.y, r: 7});
-          hit = POP.collides(POP.entities[i], {x: POP.bucket.x, y: POP.bucket.y, r: 30});
+          hit = POP.collides(POP.entities[i], {x: POP.bucket.x, y: POP.bucket.y+100, r: 10});
           // hit = POP.collidesWBucket(POP.entities[i], POP.bucket)
 
           if(hit){
             POP.score.hit += 1;
           }
+
           POP.entities[i].remove = hit;
         }
 
@@ -245,9 +246,7 @@ var POP = {
 
       //Displaying scores
       POP.Draw.text('Hit: ' + POP.score.hit, 20, 30, 14, '#fff');
-      POP.Draw.text('Escaped: ' + POP.score.escaped, 20, 50, 14, '#fff');
-      POP.Draw.text('vx: ' + POP.vx, 20, 70, 14, '#fff');
-      POP.Draw.text('vy: ' + POP.vy, 20, 90, 14, '#fff');
+      // POP.Draw.text('Escaped: ' + POP.score.escaped, 20, 50, 14, '#fff');
     },
 
     // the actual loop
@@ -342,6 +341,10 @@ POP.Draw = {
       POP.ctx.font = 'bold '+size+'px Monospace';
       POP.ctx.fillStyle = col;
       POP.ctx.fillText(string, x, y);
+  },
+
+  img: function (img, x, y, width, height) {
+    POP.ctx.drawImage(img, x, y, width, height)
   }
 };
 
@@ -349,10 +352,13 @@ POP.Bubble = function() {
 
     this.type = 'bubble';
     this.r = (Math.random() * 20) + 10;
-    this.x = (Math.random() * (POP.WIDTH) - this.r);
+    this.x = 150//(Math.random() * (POP.WIDTH) - this.r);
     this.speed = 2;
     this.y = - 100; // make sure it starts off screen
     this.remove = false;
+
+    this.img = new Image()
+    this.img.src = "rain.png"
 
     this.update = function() {
 
@@ -367,17 +373,20 @@ POP.Bubble = function() {
     };
 
     this.render = function() {
-        POP.Draw.circle(this.x, this.y, this.r, 'rgba(255,255,255,1)');
+        POP.Draw.img(this.img, this.x, this.y, 50, 50)
     };
 };
 
 POP.Bucket = function () {
   this.type = "bucket"
-  this.h = 50
-  this.y = POP.HEIGHT - (this.h+10)
-  this.w = 50
+  this.h = 200
+  this.y = POP.HEIGHT - (this.h-40)
+  this.w = 100
   this.x = POP.WIDTH/2 - this.w/2
   this.remove = false
+
+  this.img = new Image()
+  this.img.src = "bucket.png"
 
   this.update = function () {
     this.x += POP.vx/10
@@ -391,7 +400,7 @@ POP.Bucket = function () {
   }
 
   this.render = function () {
-    POP.Draw.rect(this.x, this.y, this.w, this.h, "rgba(255,255,255,1)")
+    POP.Draw.img(this.img, this.x, this.y, this.w, this.h)
   }
 }
 
