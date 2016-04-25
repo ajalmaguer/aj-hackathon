@@ -41,6 +41,7 @@ var POP = {
     WIDTH: 375,
     HEIGHT:  667,
     scale: 1,
+    speed:2,
     //position of the canvas
     // in relation to the screen
     offset: {top:0, left:0},
@@ -48,6 +49,7 @@ var POP = {
     bucket: null,
 
     nextBubble: 100,
+    delay:75,
 
     score: {
         taps: 0,
@@ -183,7 +185,7 @@ var POP = {
           // put a new instance of bubble into our entities array
           POP.entities.push(new POP.Bubble());
           // reset the counter with a random value
-          POP.nextBubble = ( Math.random() * 75 ) + 75;
+          POP.nextBubble = ( Math.random() * POP.delay ) + POP.delay;
       }
 
       if (!POP.bucket) {
@@ -214,6 +216,10 @@ var POP = {
 
           if(hit){
             POP.score.hit += 1;
+            POP.speed +=.2;
+            if(POP.delay>10){
+              POP.delay -= 5;
+            }
           }
 
           POP.entities[i].remove = hit;
@@ -353,7 +359,7 @@ POP.Bubble = function() {
     this.type = 'bubble';
     this.r = (Math.random() * 20) + 10;
     this.x = 150//(Math.random() * (POP.WIDTH) - this.r);
-    this.speed = 2;
+    this.speed = POP.speed;
     this.y = - 100; // make sure it starts off screen
     this.remove = false;
 
