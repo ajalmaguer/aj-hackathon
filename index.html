@@ -45,7 +45,7 @@ var POP = {
     // in relation to the screen
     offset: {top:0, left:0},
     entities: [],
-    bucket: false,
+    bucket: null,
 
     nextBubble: 100,
 
@@ -186,30 +186,32 @@ var POP = {
           POP.nextBubble = ( Math.random() * 75 ) + 75;
       }
 
-      if (POP.bucket == false) {
-        POP.entities.push(new POP.Bucket())
-        POP.bucket = true
+      if (!POP.bucket) {
+        POP.bucket = new POP.Bucket()
       }
 
 
 
       // spawn a new instance of Touch
       // if the user has tapped the screen
-      if (POP.Input.tapped) {
-        POP.entities.push(new POP.Touch(POP.Input.x, POP.Input.y));
-        // set tapped back to false
-        // to avoid spawning a new touch
-        // in the next cycle
-        POP.Input.tapped = false;
-        checkCollision = true;
-      }
+      // if (POP.Input.tapped) {
+      //   POP.entities.push(new POP.Touch(POP.Input.x, POP.Input.y));
+      //   // set tapped back to false
+      //   // to avoid spawning a new touch
+      //   // in the next cycle
+      //   POP.Input.tapped = false;
+      //   checkCollision = true;
+      // }
 
       // cycle through all entities and update as necessary
       for (i = 0; i < POP.entities.length; i += 1) {
         POP.entities[i].update();
 
-        if ((POP.entities[i].type === 'bubble') && checkCollision) {
-          hit = POP.collides(POP.entities[i], {x: POP.Input.x, y: POP.Input.y, r: 7});
+        if ((POP.entities[i].type === 'bubble')) {
+          // hit = POP.collides(POP.entities[i], {x: POP.Input.x, y: POP.Input.y, r: 7});
+          hit = POP.collides(POP.entities[i], {x: POP.bucket.x, y: POP.bucket.y, r: 30});
+          // hit = POP.collidesWBucket(POP.entities[i], POP.bucket)
+
           if(hit){
             POP.score.hit += 1;
           }
@@ -221,6 +223,9 @@ var POP = {
             POP.entities.splice(i, 1);
         }
       }
+
+      //update bucket
+      POP.bucket.update()
     },
 
     // this is where we draw all the entities
@@ -234,6 +239,9 @@ var POP = {
       for (i = 0; i < POP.entities.length; i += 1) {
           POP.entities[i].render();
       }
+
+      //Display bucket
+      POP.bucket.render()
 
       //Displaying scores
       POP.Draw.text('Hit: ' + POP.score.hit, 20, 30, 14, '#fff');
@@ -294,8 +302,8 @@ POP.Touch = function(x, y) {
 
 // this function checks if two circles overlap
 POP.collides = function(a, b) {
-  var distance_squared = ( ((a.x - b.x) * (a.x - b.x)) +
-                          ((a.y - b.y) * (a.y - b.y)));
+
+  var distance_squared = ( ((a.x - b.x) * (a.x - b.x)) + ((a.y - b.y) * (a.y - b.y)));
 
   var radii_squared = (a.r + b.r) * (a.r + b.r);
 
@@ -305,6 +313,10 @@ POP.collides = function(a, b) {
       return false;
   }
 };
+
+// POP.collidesWBucket = function (entity, bucket) {
+//   var entity.y
+// }
 
 
 
@@ -361,10 +373,10 @@ POP.Bubble = function() {
 
 POP.Bucket = function () {
   this.type = "bucket"
-  this.x = 300
   this.h = 50
   this.y = POP.HEIGHT - (this.h+10)
   this.w = 50
+  this.x = POP.WIDTH/2 - this.w/2
   this.remove = false
 
   this.update = function () {
