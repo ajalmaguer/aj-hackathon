@@ -364,11 +364,19 @@ POP.Bucket = function () {
   this.x = 300
   this.h = 50
   this.y = POP.HEIGHT - (this.h+10)
+  this.velocity = 0
   this.w = 50
   this.remove = false
 
   this.update = function () {
+    this.x += POP.vx
 
+    if(this.x > (POP.WIDTH - 50) && this.velocity > 0){
+      this.x = POP.WIDTH - 50
+    }
+    if(this.x < 0 && this.velocity < 0) {
+      this.x = 0
+    }
   }
 
   this.render = function () {
